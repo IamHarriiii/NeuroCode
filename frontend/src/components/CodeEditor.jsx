@@ -26,7 +26,11 @@ const CodeEditor = () => {
   return (
     <div className="flex flex-col gap-4">
       {/* 👇 Task Selector UI */}
-      <TaskSelector selectedTask={selectedTask} setSelectedTask={setSelectedTask} />
+      <TaskSelector
+        selectedTask={selectedTask}
+        setSelectedTask={setSelectedTask}
+        onRunTask={handleRunTask}
+      />
 
       <CodeMirror
         value={code}
