@@ -46,8 +46,11 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^9.26.0",
+    "@babel/eslint-parser": "^7.27.1",
+    "@babel/preset-react": "^7.27.1",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.5",
+    "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react": "^7.37.5",
     "husky": "^9.1.7",
     "lint-staged": "^16.0.0",
