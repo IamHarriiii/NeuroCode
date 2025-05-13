@@ -9,8 +9,8 @@ export const login = ({ email, password }) => axios.post(`${API}/login/`, { emai
 
 // 🧩 Auth wrapper (App.js or route level)
 import { useState, useEffect } from 'react';
-import AuthPage from './pages/AuthPage';
-import CodeEditor from './components/CodeEditor';
+import AuthPage from '../pages/AuthPage';
+import CodeEditor from '../components/CodeEditor';
 
 export default function App() {
     const [auth, setAuth] = useState(false);
