@@ -1,0 +1,14 @@
+
+:root {
+     --bg: #f9fafb;
+     --fg: #111827;
+     --primary: #4f46e5; 
+     --accent: #f59e0b;  
+   }
+   
+ 
+   body {
+     background-color: var(--bg);
+     color: var(--fg);
+   }
+   
