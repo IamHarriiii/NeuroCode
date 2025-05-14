@@ -27,6 +27,10 @@ export default function AuthPage({ onLogin }) {
         sessionStorage.setItem('access_token', response.access);
       }
       onLogin();
+      // Add navigation if using react-router
+      if (window.location.pathname === '/auth') {
+        window.location.href = '/'; // Or use navigate from react-router
+      }
     } catch (err) {
       setError(err.response?.data?.detail || JSON.stringify(err.response?.data));
     } finally {

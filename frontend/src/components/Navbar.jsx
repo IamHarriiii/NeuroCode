@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import logoimage from "../assets/logoimage.png"; // Path to your logo image
