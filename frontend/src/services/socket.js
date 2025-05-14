@@ -1,4 +1,4 @@
-// WebSocket client setup for collaborative debugging
+// 📁 frontend/src/services/socket.js
 export const socket = new WebSocket("ws://localhost:8000/ws/code/dev123");
 
 socket.onopen = () => {
