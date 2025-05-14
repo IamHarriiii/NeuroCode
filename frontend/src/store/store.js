@@ -1,4 +1,4 @@
-// store.js
+// 📁 frontend/src/store/store.js
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 const codeSlice = createSlice({
