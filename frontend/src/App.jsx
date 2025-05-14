@@ -1,4 +1,4 @@
-// 📁 frontend/src/App.jsx
+// src/App.jsx
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -9,21 +9,28 @@ import CodeEditor from "./components/CodeEditor";
 
 const App = () => {
   const [auth, setAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
     setAuth(!!token);
+    setLoading(false);
   }, []);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
 
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        <div className="pt-16">
+        {auth && <Navbar />}
+        <div className={auth ? "pt-16" : ""}>
           <Routes>
-            <Route path="/" element={<Home />} />
-
-            {/* 🔐 Auth protected routes */}
+            <Route
+              path="/"
+              element={auth ? <Home /> : <Navigate to="/auth" />}
+            />
             <Route
               path="/dashboard"
               element={auth ? <Dashboard /> : <Navigate to="/auth" />}
@@ -34,7 +41,7 @@ const App = () => {
             />
             <Route
               path="/auth"
-              element={<AuthPage onLogin={() => setAuth(true)} />}
+              element={!auth ? <AuthPage onLogin={() => setAuth(true)} /> : <Navigate to="/" />}
             />
           </Routes>
         </div>
