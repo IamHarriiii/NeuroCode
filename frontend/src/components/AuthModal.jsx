@@ -1,4 +1,5 @@
-import React ,{ useEffect } from "react";
+// src/components/AuthModal.jsx
+import React, { useEffect } from "react";
 import AuthPage from "../pages/AuthPage";
 
 export default function AuthModal({ onLogin, onClose }) {

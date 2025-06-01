@@ -1,4 +1,4 @@
-// src/components/ChatBot.jsx
+// 📁 src/components/ChatBot.jsx
 import React, { useState } from "react";
 import { runLLMInference } from "../services/api";
 
@@ -6,10 +6,10 @@ const ChatBot = () => {
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const handleChat = async () => {
     if (!query.trim()) return;
-    
+
     setIsLoading(true);
     try {
       const res = await runLLMInference(query, "chat");
@@ -20,28 +20,29 @@ const ChatBot = () => {
       setIsLoading(false);
     }
   };
-  
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+      {/* Header */}
       <div className="flex items-center gap-2 mb-2">
         <div className="h-3 w-3 rounded-full bg-green-500"></div>
-        <h2 className="text-xl font-bold text-gray-800">AI Assistant</h2>
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">AI Assistant</h2>
       </div>
-      
-      <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-        <textarea
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="border-0 p-4 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          placeholder="Ask NeuroCode Chatbot..."
-          rows={4}
-        />
-      </div>
-      
+
+      {/* Input Area */}
+      <textarea
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Ask NeuroCode Chatbot..."
+        rows={4}
+        className="w-full p-4 border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none rounded-md bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+      />
+
+      {/* Ask Button */}
       <button
         onClick={handleChat}
         disabled={isLoading}
-        className="bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-sm flex items-center justify-center gap-2"
+        className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 px-4 rounded-lg transition-all shadow-sm flex items-center justify-center gap-2"
       >
         {isLoading ? (
           <>
@@ -55,11 +56,12 @@ const ChatBot = () => {
           <>💬 Ask</>
         )}
       </button>
-      
+
+      {/* Response Output */}
       {response && (
-        <div className="bg-gray-50 p-5 rounded-lg border border-gray-200 shadow-inner mt-2">
-          <h3 className="font-bold mb-3 text-gray-700 border-b pb-2">Chat Response:</h3>
-          <div className="whitespace-pre-wrap bg-white p-4 rounded border border-gray-200">
+        <div className="bg-gray-50 dark:bg-gray-900 p-5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-inner mt-2 transition-colors duration-300">
+          <h3 className="font-bold mb-3 text-gray-700 dark:text-gray-300">Chat Response:</h3>
+          <div className="whitespace-pre-wrap bg-white dark:bg-gray-800 p-4 rounded border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200">
             {response}
           </div>
         </div>
