@@ -16,33 +16,43 @@ const ChatBot = () => {
       setResponse(res);
     } catch (error) {
       console.error("Chat error:", error);
+      setResponse("Sorry, an error occurred while processing your request.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleChat();
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-4 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+    <div className="flex flex-col gap-4 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
       {/* Header */}
       <div className="flex items-center gap-2 mb-2">
-        <div className="h-3 w-3 rounded-full bg-green-500"></div>
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">AI Assistant</h2>
+        <div className="h-3 w-3 rounded-full bg-green-500 animate-pulse"></div>
+        <h2 className="text-xl font-bold text-gray-800 dark:text-white">AI Assistant</h2>
       </div>
 
       {/* Input Area */}
       <textarea
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder="Ask NeuroCode Chatbot..."
         rows={4}
-        className="w-full p-4 border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none rounded-md bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+        className="w-full p-4 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none rounded-md bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+        disabled={isLoading}
       />
 
       {/* Ask Button */}
       <button
         onClick={handleChat}
-        disabled={isLoading}
-        className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 px-4 rounded-lg transition-all shadow-sm flex items-center justify-center gap-2"
+        disabled={isLoading || !query.trim()}
+        className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 px-4 rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-70"
       >
         {isLoading ? (
           <>
@@ -60,8 +70,11 @@ const ChatBot = () => {
       {/* Response Output */}
       {response && (
         <div className="bg-gray-50 dark:bg-gray-900 p-5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-inner mt-2 transition-colors duration-300">
-          <h3 className="font-bold mb-3 text-gray-700 dark:text-gray-300">Chat Response:</h3>
-          <div className="whitespace-pre-wrap bg-white dark:bg-gray-800 p-4 rounded border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="h-2.5 w-2.5 rounded-full bg-blue-500"></div>
+            <h3 className="font-bold text-gray-700 dark:text-gray-300">Chat Response:</h3>
+          </div>
+          <div className="whitespace-pre-wrap bg-white dark:bg-gray-800 p-4 rounded border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200">
             {response}
           </div>
         </div>

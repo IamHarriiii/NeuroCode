@@ -7,9 +7,16 @@
     --accent: #f59e0b;
     /* Amber-500 */
 }
+.dark {
+    --primary: #6366f1;
+    /* indigo-500 */
+    --accent: #fbbf24;
+    /* yellow-400 */ 
+}
 
 /* Optionally apply it globally if needed */
 body {
     background-color: var(--bg);
     color: var(--fg);
 }
+

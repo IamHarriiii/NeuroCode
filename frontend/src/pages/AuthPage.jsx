@@ -39,6 +39,10 @@ export default function AuthPage({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSignup && formData.password !== formData.confirm_password) {
+      setError("Passwords do not match");
+      return;
+    }
     setLoading(true);
     try {
       const response = isSignup ? await signup(formData) : await login(formData);
@@ -61,24 +65,29 @@ export default function AuthPage({ onLogin }) {
   };
 
   const LoadingSpinner = () => (
-    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <svg
+      className="animate-spin h-5 w-5 text-white"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
     </svg>
   );
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md mt-10">
+    <div className="max-w-md mx-auto p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">NeuroCode</h2>
-        <h3 className="text-xl font-semibold mt-2 text-gray-800 dark:text-gray-200">
+        {/* <h3 className="text-xl font-semibold mt-2 text-gray-800 dark:text-gray-200">
           {isSignup ? 'Create an Account' : 'Sign In'}
         </h3>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
           {isSignup
             ? 'Already have an account? Login below.'
             : "Don't have an account? Sign up now."}
-        </p>
+        </p> */}
       </div>
 
       {/* Error Message */}
@@ -91,25 +100,31 @@ export default function AuthPage({ onLogin }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         {isSignup && (
           <>
-            <input
-              name="first_name"
-              className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
-              placeholder="First Name"
-              value={formData.first_name}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="last_name"
-              className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
-              placeholder="Last Name"
-              value={formData.last_name}
-              onChange={handleChange}
-              required
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <input
+                  name="first_name"
+                  className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
+                  placeholder="First Name"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  name="last_name"
+                  className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
+                  placeholder="Last Name"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
             <input
               name="username"
-              className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
               placeholder="Username (optional)"
               value={formData.username}
               onChange={handleChange}
@@ -118,8 +133,8 @@ export default function AuthPage({ onLogin }) {
         )}
         <input
           name="email"
-          className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
           type="email"
+          className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
@@ -127,8 +142,8 @@ export default function AuthPage({ onLogin }) {
         />
         <input
           name="password"
-          className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
           type="password"
+          className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
@@ -137,14 +152,15 @@ export default function AuthPage({ onLogin }) {
         {isSignup && (
           <input
             name="confirm_password"
-            className="w-full px-4 py-2 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white"
             type="password"
+            className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white transition-colors"
             placeholder="Confirm Password"
             value={formData.confirm_password}
             onChange={handleChange}
             required
           />
         )}
+
         <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
           <input
             type="checkbox"
@@ -154,17 +170,21 @@ export default function AuthPage({ onLogin }) {
           />
           Remember Me
         </label>
+
         <button
-          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-2 px-4 rounded-lg font-medium transition-all shadow-md disabled:opacity-70"
           type="submit"
           disabled={loading}
+          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 px-4 rounded-lg font-medium transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {loading ? (
-            <span className="flex items-center justify-center gap-2">
-              <LoadingSpinner />
-              Processing...
-            </span>
-          ) : isSignup ? 'Create Account' : 'Sign In'}
+            <>
+              <LoadingSpinner /> Processing...
+            </>
+          ) : isSignup ? (
+            "Create Account"
+          ) : (
+            "Sign In"
+          )}
         </button>
       </form>
 
@@ -187,8 +207,7 @@ export default function AuthPage({ onLogin }) {
       <div className="flex justify-center gap-3">
         <a
           href="http://localhost:8000/accounts/github/login/"
-          className={`flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors ${socialLoading === 'github' ? 'opacity-70' : ''
-            }`}
+          className={`flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors ${socialLoading === 'github' ? 'opacity-70' : ''}`}
           onClick={() => setSocialLoading('github')}
         >
           {socialLoading === 'github' ? (
@@ -196,7 +215,11 @@ export default function AuthPage({ onLogin }) {
           ) : (
             <>
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                  clipRule="evenodd"
+                />
               </svg>
               GitHub
             </>
@@ -204,8 +227,7 @@ export default function AuthPage({ onLogin }) {
         </a>
         <a
           href="http://localhost:8000/accounts/google/login/"
-          className={`flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors ${socialLoading === 'google' ? 'opacity-70' : ''
-            }`}
+          className={`flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors ${socialLoading === 'google' ? 'opacity-70' : ''}`}
           onClick={() => setSocialLoading('google')}
         >
           {socialLoading === 'google' ? (

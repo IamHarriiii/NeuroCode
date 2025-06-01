@@ -13,7 +13,7 @@ const getSystemTheme = () => {
 };
 
 export const DarkModeProvider = ({ children }) => {
-    // State to hold dark mode status
+    // State for dark mode and whether we're following system preference
     const [darkMode, setDarkMode] = useState(() => {
         const saved = localStorage.getItem("darkMode");
         if (saved !== null) {
@@ -24,39 +24,33 @@ export const DarkModeProvider = ({ children }) => {
 
     const [isSystemTheme, setIsSystemTheme] = useState(false);
 
-    // Apply theme dynamically
+    // Apply theme class dynamically
     useEffect(() => {
         if (isSystemTheme) {
             const systemDark = getSystemTheme();
-            if (systemDark) {
-                document.documentElement.classList.add("dark");
-            } else {
-                document.documentElement.classList.remove("dark");
-            }
-            return;
-        }
-
-        if (darkMode) {
-            document.documentElement.classList.add("dark");
+            document.documentElement.classList.toggle("dark", systemDark);
         } else {
-            document.documentElement.classList.remove("dark");
+            document.documentElement.classList.toggle("dark", darkMode);
         }
     }, [darkMode, isSystemTheme]);
 
-    // Save to localStorage whenever darkMode changes
+    // Save to localStorage when darkMode changes (unless system theme)
     useEffect(() => {
-        if (!isSystemTheme) {
-            localStorage.setItem("darkMode", JSON.stringify(darkMode));
+        if (isSystemTheme) {
+            const systemDark = getSystemTheme();
+            document.documentElement.classList.toggle("dark", systemDark);
         } else {
-            localStorage.removeItem("darkMode");
+            document.documentElement.classList.toggle("dark", darkMode);
         }
     }, [darkMode, isSystemTheme]);
 
+    // Function to toggle dark mode manually
     const toggleDarkMode = () => {
         setIsSystemTheme(false);
-        setDarkMode(!darkMode);
+        setDarkMode((prev) => !prev);
     };
 
+    // Function to reset to system preference
     const resetToSystemTheme = () => {
         setIsSystemTheme(true);
         const systemDark = getSystemTheme();

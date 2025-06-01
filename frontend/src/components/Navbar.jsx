@@ -2,7 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logoimage from "../assets/logoimage.png";
-import DarkModeToggle from "./DarkModeToggle"; // Unified to use this name
+import DarkModeToggle from "./DarkModeToggle";
 
 const Navbar = () => {
   return (
@@ -18,7 +18,7 @@ const Navbar = () => {
       <div className="flex items-center space-x-6">
         <Link to="/" className="hover:text-teal-400 transition-colors">Home</Link>
         <Link to="/dashboard" className="hover:text-teal-400 transition-colors">Dashboard</Link>
-        <DarkModeToggle />
+        <DarkModeToggle /> {/* Dark mode toggle button here */}
       </div>
     </nav>
   );
