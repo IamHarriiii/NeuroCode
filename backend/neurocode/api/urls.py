@@ -1,8 +1,7 @@
 from django.urls import path
 from .views import (
-    PredictBugView, OptimizeCodeView, GenerateDocsView,
-    ChatbotView, RegisterView, LoginView,
-    UsageLogView, ExportLogsCSV, FilteredLogsView
+    PredictBugView, OptimizeCodeView, GenerateDocsView, ChatbotView,
+    RegisterView, LoginView, UsageLogView, ExportLogsCSV, FilteredLogsView
 )
 
 urlpatterns = [

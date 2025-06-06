@@ -114,8 +114,19 @@ class ChatbotView(APIView):
 
     def post(self, request):
         question = request.data.get("question")
-        prompt = f"### Developer Q&A\nQuestion:\n{question}\nAnswer:"
+        if not question:
+            return Response({"error": "Question is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Retrieve relevant context using FAISS
+        context = retrieve_context_from_faiss(question)
+        
+        # Build prompt with context
+        prompt = f"### Developer Q&A\nContext:\n{context}\n\nQuestion:\n{question}\nAnswer:"
+        
+        # Run inference with context-aware prompt
         result = run_model_inference(prompt, mode="chat")
+
+        # Log usage
         UsageLog.objects.create(
             user=request.user,
             session_id="temp_session",
@@ -123,6 +134,7 @@ class ChatbotView(APIView):
             code=prompt,
             response=result
         )
+
         return Response({"response": result})
 
 
