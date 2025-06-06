@@ -1,0 +1,79 @@
+# docker-compose.yml
+services:
+  # Backend Django API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: neurocode-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=neurocode.settings.dev
+    volumes:
+      - ./backend:/app
+    command: ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+    depends_on:
+      - db
+      - redis
+
+  # PostgreSQL DB
+  db:
+    image: postgres:15
+    container_name: neurocode-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-neurocode}
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Redis for WebSockets
+  redis:
+    image: redis:alpine
+    container_name: neurocode-redis
+    ports:
+      - "6379:6379"
+
+  # Model Inference Server (FastAPI)
+  model-server:
+    build:
+      context: ./model
+      dockerfile: Dockerfile
+    container_name: neurocode-model
+    ports:
+      - "5000:5000"
+    environment:
+      - MODEL_DIR=/app/checkpoints
+    volumes:
+      - ./model:/app
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/infer"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Frontend (React + Vite)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: neurocode-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_WS_URL=ws://localhost:8000/ws/code/
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+
+# Volumes
+volumes:
+  pgdata:
