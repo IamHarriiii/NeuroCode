@@ -2,12 +2,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from api.faiss_utils import retrieve_context_from_faiss
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from api.faiss_utils import retrieve_context_from_faiss, build_faiss_index
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from .models import UsageLog
 from .serializers import RegisterSerializer, LoginSerializer, CodeInputSerializer, UsageLogSerializer
 import requests
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -186,3 +187,34 @@ class FilteredLogsView(APIView):
         logs = logs.order_by("-timestamp")[:200]
         serializer = UsageLogSerializer(logs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class AddDocumentView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
+        document = request.data.get("document")
+        if not document:
+            return Response({"error": "Missing document content"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Load existing documents
+        try:
+            with open("api/faiss_index/documents.json", "r") as f:
+                documents = json.load(f)
+        except FileNotFoundError:
+            documents = []
+
+        # Append new document
+        documents.append(document)
+
+        # Save updated documents
+        with open("api/faiss_index/documents.json", "w") as f:
+            json.dump(documents, f)
+
+        # Rebuild FAISS index
+        try:
+            build_faiss_index(documents, save_path="api/faiss_index")
+            return Response({"message": "Document added and index rebuilt successfully"}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            logger.error(f"Failed to rebuild FAISS index: {e}")
+            return Response({"error": "Failed to rebuild index"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

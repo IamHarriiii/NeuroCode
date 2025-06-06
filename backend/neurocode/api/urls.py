@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import path,include
 from .views import (
     PredictBugView, OptimizeCodeView, GenerateDocsView, ChatbotView,
-    RegisterView, LoginView, UsageLogView, ExportLogsCSV, FilteredLogsView
+    RegisterView, LoginView, UsageLogView, ExportLogsCSV, FilteredLogsView,AddDocumentView
 )
 
 urlpatterns = [
@@ -14,4 +14,6 @@ urlpatterns = [
     path('logs/', UsageLogView.as_view(), name='usage-logs'),
     path('logs/export/', ExportLogsCSV.as_view(), name='export-logs'),
     path('logs/filter/', FilteredLogsView.as_view(), name='filter-logs'),
+    path('add-document/', AddDocumentView.as_view(), name='add-document'),
+    path('feedback/', include('rlhf.urls')),
 ]
