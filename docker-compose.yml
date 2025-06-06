@@ -2,20 +2,22 @@
 services:
   # Backend Django API
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: neurocode-backend
+    build: .
     ports:
       - "8000:8000"
-    environment:
-      - DJANGO_SETTINGS_MODULE=neurocode.settings.dev
     volumes:
-      - ./backend:/app
-    command: ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+      - .:/app
+    environment:
+      - SECRET_KEY=your-secret-key-here
     depends_on:
-      - db
-      - redis
+      - model-server
+
+  model-server:
+    build: ./model
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./model:/app
 
   # PostgreSQL DB
   db:
