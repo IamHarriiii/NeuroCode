@@ -1,0 +1,1 @@
+["Use try-except blocks to handle division by zero errors.", "for val in arr: print(val)", "Adds two numbers and returns the result", "Avoid using eval() with untrusted input.", "Use list comprehensions instead of for-loops where possible.", "Never store sensitive info in plain text files."]
