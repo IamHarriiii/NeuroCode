@@ -82,8 +82,12 @@ ASGI_APPLICATION = 'neurocode.asgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'neurocode_db',
+        'USER': 'neurocode_user',
+        'PASSWORD': 'NeuroCode_060504',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
