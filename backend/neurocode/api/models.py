@@ -29,3 +29,22 @@ class UsageLog(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.action}"
+
+
+class RewardFeedback(models.Model):
+    TASK_CHOICES = [
+        ('bug', 'Bug Prediction'),
+        ('optimize', 'Code Optimization'),
+        ('doc', 'Documentation Generation'),
+        ('chat', 'Chatbot Query')
+    ]
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    session_id = models.CharField(max_length=100, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    prompt = models.TextField()
+    chosen = models.TextField()
+    rejected = models.TextField()
+    task = models.CharField(max_length=10, choices=TASK_CHOICES)
+
+    def __str__(self):
+        return f"{self.task} @ {self.timestamp}"

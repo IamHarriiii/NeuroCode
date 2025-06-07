@@ -60,7 +60,7 @@ ROOT_URLCONF = 'neurocode.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,6 +72,9 @@ TEMPLATES = [
         },
     },
 ]
+
+LOGIN_REDIRECT_URL = "/api/feedback/dashboard/"
+LOGOUT_REDIRECT_URL = "/"
 
 WSGI_APPLICATION = 'neurocode.wsgi.application'
 ASGI_APPLICATION = 'neurocode.asgi.application'

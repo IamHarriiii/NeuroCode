@@ -95,12 +95,13 @@ def build_faiss_index(documents, save_path=None):
         raise
 
 
-def retrieve_context_from_faiss(query, top_k=3):
+def retrieve_context_from_faiss(query, task=None, top_k=3):
     """
     Retrieve top-k relevant documents from FAISS index based on query.
     
     Args:
         query (str): Query string.
+        task (str, optional): Task type for filtering documents (not currently used).
         top_k (int): Number of nearest neighbors to retrieve.
         
     Returns:
