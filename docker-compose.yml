@@ -1,46 +1,53 @@
-# docker-compose.yml
+version: '3.8'
+
 services:
-  # Backend Django API
+  # Django Backend API
   backend:
     build: .
+    container_name: neurocode-backend
     ports:
       - "8000:8000"
+    environment:
+      - SECRET_KEY='django-insecure-a#669q*n!2&mt!#n18x0abvm14v9wa8z-39w5e8av9&#ybu7-8'
+      - DB_NAME=neurocode_db
+      - DB_USER=neurocode_user
+      - DB_PASSWORD=NeuroCode_060504
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - ALLOWED_HOSTS=localhost,backend
     volumes:
       - .:/app
-    environment:
-      - SECRET_KEY=your-secret-key-here
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     depends_on:
+      - db
+      - redis
       - model-server
+    command: ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn neurocode.wsgi:application --bind 0.0.0.0:8000"]
 
-  model-server:
-    build: ./model
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./model:/app
-
-  # PostgreSQL DB
+  # PostgreSQL Database
   db:
     image: postgres:15
     container_name: neurocode-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME:-neurocode}
-      POSTGRES_USER: ${DB_USER:-admin}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
+      POSTGRES_DB: ${DB_NAME:-neurocode_db}
+      POSTGRES_USER: ${DB_USER:-neurocode_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-NeuroCode_060504}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  # Redis for WebSockets
+  # Redis for WebSockets (Channels)
   redis:
     image: redis:alpine
     container_name: neurocode-redis
     ports:
       - "6379:6379"
 
-  # Model Inference Server (FastAPI)
+  # Model Inference Server (FastAPI + LLM)
   model-server:
     build:
       context: ./model
@@ -53,14 +60,17 @@ services:
     volumes:
       - ./model:/app
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+      db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/infer"]
       interval: 10s
       timeout: 5s
       retries: 10
 
-  # Frontend (React + Vite)
+  # React Frontend (Vite Dev Server)
   frontend:
     build:
       context: ./frontend
@@ -69,13 +79,15 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_URL=http://localhost:8000
-      - VITE_WS_URL=ws://localhost:8000/ws/code/
+      - VITE_API_URL=http://backend:8000
+      - VITE_WS_URL=ws://backend:8000/ws/code/
     volumes:
       - ./frontend:/app
     depends_on:
       - backend
+    command: ["npm", "run", "dev"]
 
-# Volumes
 volumes:
   pgdata:
+  static_volume:
+  media_volume:
