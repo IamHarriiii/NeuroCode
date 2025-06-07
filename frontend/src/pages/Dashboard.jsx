@@ -3,6 +3,7 @@ import React from "react";
 import UsageLogs from "../components/UsageLogs";
 import MetricsDashboard from "../components/MetricsDashboard";
 import ChatBot from "../components/ChatBot";
+import FeedbackForm from "../components/FeedbackForm";
 
 const Dashboard = () => {
   return (
@@ -22,6 +23,16 @@ const Dashboard = () => {
         <MetricsDashboard />
         <UsageLogs />
         <ChatBot />
+      </div>
+
+      {/* Feedback Section */}
+      <div className="grid grid-cols-1 gap-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-5">
+          <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+            Submit Feedback
+          </h2>
+          <FeedbackForm />
+        </div>
       </div>
 
       {/* Footer */}
