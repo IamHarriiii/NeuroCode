@@ -5,6 +5,16 @@ Django settings for neurocode project.
 import os
 from pathlib import Path
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    # Load .env file from project root
+    env_path = Path(__file__).resolve().parent.parent.parent.parent / '.env'
+    load_dotenv(env_path)
+except ImportError:
+    # python-dotenv not installed, skip loading .env file
+    pass
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

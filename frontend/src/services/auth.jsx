@@ -6,10 +6,10 @@ axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-const API = 'http://localhost:8000';
+const BASE_URL = 'http://localhost:8000';
 
 export const signup = (formData) =>
-    axios.post(`${API}/signup/`, formData, {
+    axios.post(`${BASE_URL}/signup/`, formData, {
         headers: {
             'Content-Type': 'application/json',
         },
@@ -21,7 +21,7 @@ export const signup = (formData) =>
         });
 
 export const login = ({ email, password }) =>
-    axios.post(`${API}/login/`, { email, password }, {
+    axios.post(`${BASE_URL}/login/`, { email, password }, {
         headers: {
             'Content-Type': 'application/json',
         },
