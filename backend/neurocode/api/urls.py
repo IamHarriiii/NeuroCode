@@ -1,17 +1,12 @@
 from django.urls import path, include
 from .views import (
-    PredictBugView, OptimizeCodeView, GenerateDocsView, ChatbotView,
-    RegisterView, LoginView, UsageLogView, ExportLogsCSV, FilteredLogsView,
+    PredictBugView, OptimizeCodeView, GenerateDocsView, ChatbotView, UsageLogView, ExportLogsCSV, FilteredLogsView,
     AddDocumentView
 )
 from .rlhf_views import SubmitFeedback  # <-- Imported the new feedback view
 from .feedback_dashboard import feedback_dashboard
 
 urlpatterns = [
-    # Authentication routes
-    path('signup/', RegisterView.as_view(), name='register'),
-    path('login/', LoginView.as_view(), name='login'),
-    
     # AI feature routes
     path('bug-predict/', PredictBugView.as_view(), name='bug-predict'),
     path('optimize/', OptimizeCodeView.as_view(), name='optimize'),

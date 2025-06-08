@@ -109,6 +109,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # CORS Settings
 CORS_ALLOW_CREDENTIALS = True
@@ -157,10 +159,27 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+# Social account providers
+SOCIALACCOUNT_PROVIDERS = {
+    "github": {
+        "APP": {
+            "client_id": os.getenv('GITHUB_OAUTH_CLIENT_ID', ''),
+            "secret": os.getenv('GITHUB_OAUTH_CLIENT_SECRET', ''),
+            "key": ""
+        }
+    },
+    "google": {
+        "APP": {
+            "client_id": os.getenv('GOOGLE_OAUTH_CLIENT_ID', ''),
+            "secret": os.getenv('GOOGLE_OAUTH_CLIENT_SECRET', ''),
+            "key": ""
+        }
+    }
+}
 
 # Channels Settings
 CHANNEL_LAYERS = {
